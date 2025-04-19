@@ -1,0 +1,91 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row =>
+                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+                );
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>产品灵感库，让抱怨变成机会！</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    p {
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto 20px;
+    }
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+    .thank-you {
+      display: none;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>产品灵感库，让抱怨变成机会！</h1>
+  <p>从社交平台（X、Reddit等）收集产品开发的 20 个痛点与抱怨，每日更新，助你挖掘产品灵感！一次性付费 $5，即可访问所有数据。</p>
+  <a href="YOUR_STRIPE_CHECKOUT_LINK" class="button">立即支付 $5</a>
+
+  <!-- 感谢页面内容 -->
+  <div id="thankYou" class="thank-you">
+    <h2>感谢你的购买！</h2>
+    <p>这是每日更新的 X 抱怨数据：<br>
+    <a href="https://docs.google.com/spreadsheets/d/147NBooRVxPK7gB18j1v1HLMb4mqTYGO5pcAWSM4r-1g/edit?usp=sharing" target="_blank">点击查看 Google Sheets</a></p>
+  </div>
+
+  <script>
+    // Stripe 成功后显示感谢信息
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      document.getElementById('thankYou').style.display = 'block';
+      document.querySelector('.button').style.display = 'none';
+      document.querySelector('p').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
