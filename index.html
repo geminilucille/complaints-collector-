@@ -71,21 +71,16 @@
   <p>从社交平台（X、Reddit等）收集产品开发的 20 个痛点与抱怨，每日更新，助你挖掘产品灵感！一次性付费 $5，即可访问所有数据。</p>
   <a href="YOUR_STRIPE_CHECKOUT_LINK" class="button">立即支付 $5</a>
 
-  <!-- 感谢页面内容 -->
-  <div id="thankYou" class="thank-you">
-    <h2>感谢你的购买！</h2>
-    <p>这是每日更新的 X 抱怨数据：<br>
-    <a href="https://docs.google.com/spreadsheets/d/147NBooRVxPK7gB18j1v1HLMb4mqTYGO5pcAWSM4r-1g/edit?usp=sharing" target="_blank">点击查看 Google Sheets</a></p>
-  </div>
+ <script async
+  src="https://js.stripe.com/v3/buy-button.js">
+</script>
 
-  <script>
-    // Stripe 成功后显示感谢信息
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-      document.getElementById('thankYou').style.display = 'block';
-      document.querySelector('.button').style.display = 'none';
-      document.querySelector('p').style.display = 'none';
-    }
-  </script>
+<stripe-buy-button
+  buy-button-id="buy_btn_1RGWIxEA44YENwhfds6NUvfs"
+  publishable-key="pk_live_51RFRHBEA44YENwhfy2SOV5U2Wwqf2PgUGPYA2an2xrW1ZOsitLptC7XfkUd3590SyuZUBoiHJDxqbLFmtpWU2s5O00sjKdeddE"
+>
+</stripe-buy-button>
+
+ 
 </body>
 </html>
