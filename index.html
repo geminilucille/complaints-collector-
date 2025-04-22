@@ -1,86 +1,161 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row =>
-                    row.some(cell => cell !== '' && cell !== null && cell !== undefined)
-                );
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>产品灵感库，让抱怨变成机会！</title>
+  <title>Product Insight Hub | 产品灵感库 | 让抱怨变成机会</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row =>
+            row.some(cell => cell !== '' && cell !== null && cell !== undefined)
+          );
+          var csv = XLSX.utils.aoa_to_sheet(filteredData);
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-      background-color: #f4f4f4;
+      font-family: 'Inter', sans-serif;
+      background-color: #fef9e7;
     }
-    h1 {
-      color: #333;
+    .gradient-text {
+      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
-    p {
-      color: #666;
-      max-width: 600px;
-      margin: 0 auto 20px;
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.1), 0 4px 6px -2px rgba(245, 158, 11, 0.05);
+      transition: all 0.3s ease;
     }
-    .button {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 16px;
+    .card:hover {
+      box-shadow: 0 20px 25px -5px rgba(245, 158, 11, 0.1), 0 10px 10px -5px rgba(245, 158, 11, 0.04);
+      transform: translateY(-2px);
     }
-    .button:hover {
-      background-color: #0056b3;
+    .bg-yellow-50 {
+      background-color: #fffbeb;
     }
-    .thank-you {
-      display: none;
-      margin-top: 20px;
+    .text-yellow-600 {
+      color: #d97706;
+    }
+    .bg-yellow-100 {
+      background-color: #fef3c7;
+    }
+    .text-yellow-800 {
+      color: #92400e;
     }
   </style>
 </head>
-<body>
-  <h1>产品灵感库，让抱怨变成机会！</h1>
-  <p>从社交平台（X、Reddit等）收集产品开发的 20 个痛点与抱怨，每日更新，助你挖掘产品灵感！一次性付费 $5，即可访问所有数据。</p>
-  
+<body class="min-h-screen flex flex-col">
+  <!-- Header -->
+  <header class="py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="flex justify-center mb-6">
+        <div class="w-16 h-16 rounded-full bg-yellow-50 flex items-center justify-center">
+          <i class="fas fa-lightbulb text-yellow-600 text-2xl"></i>
+        </div>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+        Product Insight Hub
+      </h1>
+      <h2 class="text-2xl sm:text-3xl font-bold mb-4">
+        <span class="gradient-text">产品灵感库</span>
+      </h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        从社交平台（X、Reddit等）收集产品开发的20个痛点与抱怨，每日更新，助您挖掘产品灵感！
+      </p>
+    </div>
+  </header>
 
- <script async
-  src="https://js.stripe.com/v3/buy-button.js">
-</script>
+  <!-- Main Content -->
+  <main class="flex-grow px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+      <!-- Value Proposition Card -->
+      <div class="card p-8 mb-8">
+        <div class="space-y-6">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-yellow-50 p-3 rounded-lg">
+              <i class="fas fa-bolt text-yellow-600"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">每日精选痛点</h3>
+              <p class="mt-1 text-gray-600">我们每天从各大平台筛选20个最具价值的用户抱怨</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-yellow-50 p-3 rounded-lg">
+              <i class="fas fa-sync-alt text-yellow-600"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">实时更新</h3>
+              <p class="mt-1 text-gray-600">数据每日自动更新，确保您获得最新市场反馈</p>
+            </div>
+          </div>
+          
+          <div class="flex items-start">
+            <div class="flex-shrink-0 bg-yellow-50 p-3 rounded-lg">
+              <i class="fas fa-lock text-yellow-600"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-lg font-medium text-gray-900">一次性付费</h3>
+              <p class="mt-1 text-gray-600">仅需$5即可永久访问所有数据，无隐藏费用</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pricing & CTA -->
+      <div class="text-center">
+        <div class="mb-6">
+          <span class="inline-block bg-yellow-100 text-yellow-800 text-sm font-semibold px-3 py-1 rounded-full">
+            限时优惠
+          </span>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">一次性支付 $5</h3>
+        <p class="text-gray-600 mb-6">永久访问所有数据</p>
+        
+        <!-- Stripe Button -->
+        <div class="card p-6">
+          <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+          <stripe-buy-button
+            buy-button-id="buy_btn_1RGWIxEA44YENwhfds6NUvfs"
+            publishable-key="pk_live_51RFRHBEA44YENwhfy2SOV5U2Wwqf2PgUGPYA2an2xrW1ZOsitLptC7XfkUd3590SyuZUBoiHJDxqbLFmtpWU2s5O00sjKdeddE"
+          ></stripe-buy-button>
+        </div>
+      </div>
+    </div>
+  </main>
 
-<stripe-buy-button
-  buy-button-id="buy_btn_1RGWIxEA44YENwhfds6NUvfs"
-  publishable-key="pk_live_51RFRHBEA44YENwhfy2SOV5U2Wwqf2PgUGPYA2an2xrW1ZOsitLptC7XfkUd3590SyuZUBoiHJDxqbLFmtpWU2s5O00sjKdeddE"
->
-</stripe-buy-button>
-
- 
+  <!-- Footer -->
+  <footer class="py-8 px-4 sm:px-6 lg:px-8 text-center">
+    <p class="text-gray-500 text-sm">
+      © 2023 Product Insight Hub. 保留所有权利.
+    </p>
+    <p class="text-gray-400 text-xs mt-2">
+      有问题请联系: support@chanpinlinggan.com
+    </p>
+  </footer>
 </body>
 </html>
